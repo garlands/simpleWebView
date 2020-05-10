@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta http-equiv="content-type" charset="utf-8">
+            <meta name="viewport"
+            content="width=320,
+            height=480,
+            initial-scale=1.0,
+            minimum-scale=1.0,
+            maximum-scale=2.0,
+            user-scalable=yes" />
+        <title>WebView Test</title>
+        <script>
+            var updateHTML = function () {
+//                alert("こんにちは");
+//                updateArea.innerHTML="Updated!！";
+                updateArea.innerHTML="<img style='width: 100%;' src='comanion.png' />";
+            }
+        </script>
+    </head>
+    <body>
+        <div id="updateArea">ここが更新されます</div>
+        <div >
+            <button onclick="updateHTML();" >Update</button>
+        </div>
+        <img style="width: 100%;" src="sige.jpg" />
+    </body>
+</html>
