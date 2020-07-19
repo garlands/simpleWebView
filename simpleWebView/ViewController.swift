@@ -11,11 +11,106 @@ import WebKit
 
 class ViewController: UIViewController, WKUIDelegate {
 
+    @IBOutlet weak var result1Label: UILabel!
+    @IBOutlet weak var result2Label: UILabel!
+    @IBOutlet weak var result3Label: UILabel!
+
     @IBOutlet var webView: WKWebView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        coptyFile()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        
+//        let webConfig = WKWebViewConfiguration()
+        let myURL = Bundle.main.url(forResource: "index", withExtension: "html")
+        let myRequest = URLRequest(url: myURL!)
+        webView.navigationDelegate = self
+        webView.uiDelegate = self
+        
+        webView.load(myRequest)
+    }
+
+    func toJavaScript() {
+
+    }
+    
+    @IBAction func touchUpButton(_ sender: Any) {
+//        webView.evaluateJavaScript("updateHTML()", completionHandler: nil)
+        webView.evaluateJavaScript("updateHTML1()") { (result, error) in
+            if error == nil {
+                print(result.debugDescription)
+                let str = result as! String
+                self.result1Label.text = str
+            } else {
+                print("Error! \(error.debugDescription)")
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.webView.evaluateJavaScript("updateHTML2()") { (result, error) in
+                if error == nil {
+                    if result != nil {
+                        print(result.debugDescription)
+                        do {
+                            let str = result as! String
+                            try self.result2Label.text = str
+                        } catch {
+                            self.result2Label.text = "error"
+                        }
+                    } else {
+                        self.result2Label.text = "error"
+                    }
+                }else{
+                    print("Error! \(error.debugDescription)")
+                }
+            }
+        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            self.webView.evaluateJavaScript("updateHTML3()") { (result, error) in
+                if error == nil {
+                    print(result.debugDescription)
+                    let str = result as! String
+                    self.result3Label.text = str
+                } else {
+                    print("Error! \(error.debugDescription)")
+                }
+            }
+        }
+    }
+}
+
+extension ViewController: WKNavigationDelegate {
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        print("didFinish")
+    }
+    
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+                let url = navigationAction.request.url
+        print("decidePolicyFor: \(url)")
+        decisionHandler(.allow)
+    }
+
+//    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
+//        let url = navigationAction.request.url
+//        print("didFinish: \(url)")
+//        decisionHandler(.allow)
+//    }
+}
+
+
+extension ViewController : WKScriptMessageHandler {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
+        print(message.body)
+        let dict = message.body as? Dictionary<String, String>
+        print(dict?.description)
+    }
+}
+
+extension ViewController {
+    func coptyFile(){
         copyBundleToDocuments(fileExtension: "png")
         copyBundleToDocuments(fileExtension: "jpg")
         copyBundleToTemporary(fileExtension: "png")
@@ -24,20 +119,6 @@ class ViewController: UIViewController, WKUIDelegate {
         copyBundleToCache(fileExtension: "jpg")
         removeAtTemporaryFile(filename: "sige.jpg")
         removeAtCacheFile(filename: "sige.jpg")
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        webView.uiDelegate = self
-        let myURL = Bundle.main.url(forResource: "index", withExtension: "html")
-        let myRequest = URLRequest(url: myURL!)
-        webView.load(myRequest)
-    }
-
-    
-    @IBAction func touchUpButton(_ sender: Any) {
-        webView.evaluateJavaScript("updateHTML()", completionHandler: nil)
     }
     
     func copyBundleToDocuments(fileExtension: String) {
@@ -71,12 +152,12 @@ class ViewController: UIViewController, WKUIDelegate {
                 let documentsURL = URL(fileURLWithPath: path)
                 let filteredFiles = dirContents.filter{ $0.contains(fileExtension)}
                 for fileName in filteredFiles {
-//                    if let documentsURL = documentsURL {
-                        let sourceURL = Bundle.main.bundleURL.appendingPathComponent(fileName)
-                        let destURL = documentsURL.appendingPathComponent(fileName)
-                        print(destURL)
-                        do { try FileManager.default.copyItem(at: sourceURL, to: destURL) } catch { }
-//                    }
+                    //                    if let documentsURL = documentsURL {
+                    let sourceURL = Bundle.main.bundleURL.appendingPathComponent(fileName)
+                    let destURL = documentsURL.appendingPathComponent(fileName)
+                    print(destURL)
+                    do { try FileManager.default.copyItem(at: sourceURL, to: destURL) } catch { }
+                    //                    }
                 }
             } catch {
                 print("error")
@@ -128,6 +209,4 @@ class ViewController: UIViewController, WKUIDelegate {
             print("remove error")
         }
     }
-    
 }
-

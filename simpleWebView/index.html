@@ -11,18 +11,26 @@
             user-scalable=yes" />
         <title>WebView Test</title>
         <script>
-            var updateHTML = function () {
-//                alert("こんにちは");
-//                updateArea.innerHTML="Updated!！";
-                updateArea.innerHTML="<img style='width: 100%;' src='comanion.png' />";
+            var updateHTML1 = function () {
+                updateArea1.innerHTML="Updated 1";
+                return "return 1"
+            }
+            var updateHTML2 = function () {
+                updateArea2.innerHTML= "Updated 2";
+                return "return 2";
+            }
+            var updateHTML3 = function () {
+                updateArea3.innerHTML="Updated 3";
+                return "Maybe nobody’s business is hotter right now than Cynthia Brothers’.\nOK, it’s more of a hobby than a business. But with what’s going on in Seattle these days, “it has ended up kind of taking over my life,” Brothers says.\nBrothers chronicles loss. Most days at her website, Vanishing Seattle, she tries to document the city’s “displaced & disappearing institutions, businesses, communities & cultures.” Lately it’s been like taking photos while going over a waterfall.\nThere was the landmark theater Cinerama, gone. Ballard’s Bop Street Records, with its half-million albums, closed. Bavarian Meats, gone from the Pike Place Market, where it’s been since the World’s Fair. Re-bar, the Seattle club that became a cultural pioneer by realizing it didn’t have to be pigeonholed as either a gay bar or a straight bar, closed and moving out of downtown."
             }
         </script>
     </head>
     <body>
-        <div id="updateArea">ここが更新されます</div>
+        <div id="updateArea1">Ready 1</div>
+        <div id="updateArea2">Ready 2</div>
+        <div id="updateArea3">Ready 3</div>
         <div >
             <button onclick="updateHTML();" >Update</button>
         </div>
-        <img style="width: 100%;" src="sige.jpg" />
     </body>
 </html>
